@@ -1,3 +1,0 @@
-[default]
-DATABASE_URI = "sqlite:///app.db"
-MODIFICATIONS = false
