@@ -1,4 +1,4 @@
-from flask  import Flask, request, jsonify
+from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 import datetime
 import jwt
@@ -68,7 +68,7 @@ def fazer_login():
             'sub': usuario.id
         }
         token = gerar_jwt(payload)
-        return jsonify({'token': token.decode('utf-8')}), 200
+        return jsonify({'token': token}), 200
     return jsonify({'mensagem': 'Nome de usuário ou senha inválidos!'}), 401
 
 # Rota para obter um usuário
@@ -99,15 +99,13 @@ def listar_usuarios(payload):
     return jsonify({'usuarios': result}), 200
 
 # Função de criação do aplicativo Flask
-def jls_extract_def():
-    # Adicionando esta linha
-    return 
-
-
 def create_app(config):
     app = Flask(__name__)
     app.config.from_object(config)
     db.init_app(app)
+
+    with app.app_context():
+        db.create_all()
 
     # Registro de blueprints (rotas)
     app.add_url_rule('/registro', view_func=registrar_usuario, methods=['POST'])
@@ -116,7 +114,7 @@ def create_app(config):
     app.add_url_rule('/usuario/<int:id_usuario>', view_func=deletar_usuario, methods=['DELETE'])
     app.add_url_rule('/usuarios', view_func=listar_usuarios, methods=['GET'])
 
-    return app  
+    return app
 
 # Rodando o aplicativo Flask
 if __name__ == "__main__":
